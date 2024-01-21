@@ -1,5 +1,6 @@
 const express = require("express");
 const UserModel = require("../models/user");
+const ChatModel = require("../models/chat");
 const { verifyAccessToken, deleteToken } = require("../common");
 
 async function modifyAccountDetails(req, res) {
@@ -82,6 +83,9 @@ async function swipeRight(req, res) {
             // Add current user to other user's skip list
             user.skipList.push(otherUser._id);
             await user.save();
+
+            // Create chat between both users
+            await ChatModel.create({ userIds: [user._id, otherUser._id], messages: [] })
 
             res.status(200).json({ isMatched: true });
             return;
