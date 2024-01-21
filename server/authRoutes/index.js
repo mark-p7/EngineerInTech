@@ -34,6 +34,7 @@ async function register(req, res) {
         const user = await UserModel.create({ email: req.body.email, password: hashedPassword, skipList: [] });
         const token = generateAccessToken({ _id: user._id });
         user.tokens.push(token);
+        user.skipList.push(user._id);
         await user.save();
 
         // Set header and send response
