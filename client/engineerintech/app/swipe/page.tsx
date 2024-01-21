@@ -236,13 +236,14 @@ export default function Swipe () {
                   >
                 <div className="flex flex-col">
                   <div className="flex flex-row top-[4%] absolute">
-                    <button onTouchStart={() => router.push("/")}>
+                    <button onTouchStart={() => router.push("/chat")}>
                       <img className="ml-[10.5px] mt-[10.5px] w-16 invert" src="./logos/chat.svg" alt="" />
                     </button>
                     
                 
 
-                      {user.skillCanTeach!=""? (                      <button onTouchStart={() => router.push("/profile")}>
+                      {user.skillCanTeach!=""? (                      
+                        <button onTouchStart={() => router.push("/profile")}>
                         <img className="ml-[65vw] mt-[10.5px] w-14 invert" src="./logos/edit-profile2.svg" alt="" />
                       </button>):                      <button onTouchStart={() => router.push("/profile")}>
                         <img className="ml-[65vw] mt-[10.5px] w-14 fill-yellow-900 border-4 border-red-600 p-1 bg-yellow-500" src="./logos/edit-profile2.svg" alt="" />

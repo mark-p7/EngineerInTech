@@ -99,9 +99,11 @@ async function getAllChats(req, res) {
             const otherUser = await UserModel.findOne({ _id: otherUserId });
             await chats[i].save();
             allChats.push({
+                chatId: chats[i]._id,
                 name: otherUser.name,
                 profileImage: otherUser.profileImage,
-                message: chats[i].messageList.length > 0 ? chats[i].messageList[chats[i].messageList.length - 1].text : "Say Hello"
+                message: chats[i].messageList.length > 0 ? chats[i].messageList[chats[i].messageList.length - 1].message : "Say Hello",
+                timestamp: chats[i].messageList.length > 0 ? chats[i].messageList[chats[i].messageList.length - 1].createdAt : "",
             });
         }
 
