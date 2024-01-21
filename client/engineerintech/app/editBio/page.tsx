@@ -20,7 +20,7 @@ export default function Component() {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    if (user != undefined && !localStorage.getItem("token")) router.push("/signup");
+    if (user != undefined && !user._id) router.push("/signup");
   }, [user]);
   
   return (

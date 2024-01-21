@@ -23,7 +23,7 @@ function Profile() {
 
   useEffect(() => {
     if (user != undefined && !user._id) router.push("/signup");
-  }, []);
+  }, [user]);
 
   // for read more/less
   const [isReadMoreShown, setReadMoreShown] = useState(false)
