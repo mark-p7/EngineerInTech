@@ -36,6 +36,7 @@ export default function Component() {
         else{
           // direct them to the main page
           console.log("direct to next page")
+          router.push("/editBio")
         }
     }
 

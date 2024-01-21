@@ -1,10 +1,6 @@
 "use client"
 import React, { useState, createContext, useEffect } from "react";
-<<<<<<< HEAD
-import customAxios from "../../lib/axios";
-=======
 import customAxios from "@/lib/axios";
->>>>>>> origin/connectingLoginSignupPages
 
 export const defaultUser: IUser = {
     "email": "",
