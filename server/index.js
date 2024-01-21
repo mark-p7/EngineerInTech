@@ -32,7 +32,7 @@ const ChatModel = require("./models/chat");
 
 const io = socket(server, {
     cors: {
-        origin: ["http://localhost:3000", process.env.CLIENT_URL],
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });
@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
 
 app.use(cors(
     {
-        origin: ["http://localhost:3000", process.env.CLIENT_URL],
+        origin: "*",
         credentials: true
     }
 ));
