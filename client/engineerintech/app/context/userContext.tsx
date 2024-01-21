@@ -18,7 +18,7 @@ export const defaultUser: IUser = {
     "matchList": [],
     "chats": [],
     "tokens": [],
-    "_id": "",
+    "_id": "1",
     "dateOfBirth": "",
     "__v": 0
 }
@@ -62,15 +62,18 @@ export const UserContext = createContext(defaultUserContext);
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<IUser>(defaultUser);
-
+    
     useEffect(() => {
         if (typeof window === "undefined") return;
         const token = localStorage.getItem("token");
-        if (!token) return;
+        if (!token) {
+            setUser({...defaultUser, "_id": ""});
+            return;
+        }
         customAxios.post("/token/validate", { token: token }).then((res) => {
-            res.data._id != "" ? setUser(res.data) : setUser(defaultUser);
+            res.data._id != "" ? setUser(res.data) : setUser({ ...defaultUser, "_id": "" });
         }).catch((err: any) => {
-            setUser(err);
+            setUser({ ...defaultUser, "_id": "" });
         });
     }, []);
 
@@ -108,7 +111,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
             customAxios.post("/logout", { token: token }).then((res: { data: { isLoggedOut: any; }; }) => {
                 if (res.data.isLoggedOut) {
                     localStorage.removeItem("token");
-                    setUser(defaultUser);
+                    setUser({...defaultUser, "_id": ""});
                 }
             });
         } catch (err) {
