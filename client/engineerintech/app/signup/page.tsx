@@ -8,21 +8,46 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {useRouter} from "next/navigation"
-import { useState } from "react"
+import { UserContext } from "../context/userContext"
+import { useContext, useState } from "react"
 
 export default function Component() {
     const router = useRouter();
+    const userContext = useContext(UserContext);
+    const {register} = userContext;
 
     // state to store password values
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const onClickSignUp = () => {
-        // TODO: make sure that the email is valid before the user is allowed to click sign up!
-        // handle the signup logic
+    function isValidEmail(email:string) {
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return emailRegex.test(email);
+    }
 
-        // direct them to the next page
-        // router.push('/signup')
+    const onClickLogin = () => {
+      router.push('/login');
+    }
+
+    const onClickSignUp = async() => {
+      // TODO: make sure that the email is valid before the user is allowed to click sign up!
+      // handle the signup logic
+      if(password !== confirmPassword){
+        return
+      }
+      if(!isValidEmail(email)){
+        console.error('email invalid!');
+        return
+      }
+      const registered = await register(email, password);
+      if(!registered){
+        // keep the user on this page
+      }
+      else{
+        // direct them to the edit profile page
+        router.push('/editBio');
+      }
     }
     
 
@@ -41,7 +66,7 @@ export default function Component() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-gray-100">Email</Label>
-              <Input id="email" placeholder="user@example.com" required type="email" />
+              <Input id="email" placeholder="user@example.com" required type="email" value={email} onChange={(e)=> setEmail(e.target.value)}/>
             </div>
             <div className="space-y-2">
               <Label htmlFor="password" className="text-gray-100">Password</Label>
@@ -52,9 +77,15 @@ export default function Component() {
               <Input id="confirmpassword" required type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
             </div>
             {(password != confirmPassword) && <p className="text-red-400">Passwords do not match!</p>}
-            <Button className="w-full bg-gray-800 text-white" type="submit" disabled={password != confirmPassword}>
+            <Button className="w-full bg-gray-800 text-white" type="submit" disabled={password != confirmPassword} onClick={() => onClickSignUp()}>
               Sign Up
             </Button>
+            <div className="mt-4 mr-4 text-center text-sm text-gray-100">
+            <span className="mr-2">Have an account?</span>
+            <span className="underline text-gray-100" onClick={onClickLogin}>
+              Log In
+            </span>
+          </div>
           </div>
         </div>
       </main>

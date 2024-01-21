@@ -35,7 +35,7 @@ export default function Component() {
         }
         else{
           // direct them to the main page
-          console.log("direct to next page")
+          router.push('/swipe')
         }
     }
 
@@ -49,7 +49,7 @@ export default function Component() {
       <main className="flex flex-col items-center flex-1 p-4">
         <div className="mx-auto w-full max-w-sm space-y-4">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-white">Login</h1>
+            <h1 className="text-3xl font-bold text-white">Log In</h1>
           </div>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -61,7 +61,7 @@ export default function Component() {
               <Input id="password" required type="password" value={passwordInput} onChange={(e)=>{setPasswordInput(e.currentTarget.value)}}/>
             </div>
             <Button className="w-full bg-gray-800 text-white" onClick={() => onClickLogin()}>
-              Login
+              Log In
             </Button>
           </div>
           <div className="mt-4 mr-4 text-center text-sm text-gray-100">

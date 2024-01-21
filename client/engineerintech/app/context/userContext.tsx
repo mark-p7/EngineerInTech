@@ -46,7 +46,7 @@ export interface IUser {
 
 export interface IUserContext {
     user: IUser;
-    register: (email: string, password: string) => void;
+    register: (email: string, password: string) => void | Promise<boolean>;
     login: (email: string, password: string) => void | Promise<boolean>; 
     logout: () => void;
 }
@@ -76,14 +76,17 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         });
     }, []);
 
-    const register = (email: string, password: string) => {
-        customAxios.post("/register", { email: email, password: password }).then((res: { data: IUser; }) => {
-            const newUser: IUser = res.data;
+    const register = async (email: string, password: string): Promise<boolean> => {
+        try{
+            const result = await customAxios.post("/register", { email: email, password: password });
+            const newUser: IUser = result.data;
             if (typeof window !== "undefined") localStorage.setItem("token", newUser.tokens[0]);
             setUser(newUser);
-        }).catch((err: any) => {
-            console.log(err);
-        });
+            return true;
+        } catch(err){
+            console.log(err)
+        }
+        return false;
     };
 
     const login = async (email: string, password: string): Promise<boolean> => {
