@@ -23,15 +23,19 @@ const User = new mongoose.Schema(
             min: 3,
             max: 30,
         },
-        images: {
-            type: [String],
-            default: [],
+        occupation: {
+            type: String,
+            default: "",
         },
         dateOfBirth: {
             type: Date,
             default: Date.now,
         },
         sex: {
+            type: String,
+            default: "",
+        },
+        pronouns: {
             type: String,
             default: "",
         },
@@ -47,7 +51,7 @@ const User = new mongoose.Schema(
             type: String,
             default: "",
         },
-        userDesc: {
+        bio: {
             type: String,
             default: "",
         },
