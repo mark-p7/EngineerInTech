@@ -23,6 +23,10 @@ const User = new mongoose.Schema(
             min: 3,
             max: 30,
         },
+        occupation: {
+            type: String,
+            default: "",
+        },
         images: {
             type: [String],
             default: [],
