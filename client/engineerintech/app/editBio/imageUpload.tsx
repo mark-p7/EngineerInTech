@@ -1,36 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import { Button } from "@/components/ui/button"
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
+import {UserContext} from "../context/userContext";
 
 const ImageUpload: React.FC = () => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [error, setError] = useState<string>('');
+   const [base64, setBase64] = useState<string>('');
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+      const userContext = useContext(UserContext);
+    const { user } = userContext; // Access 'user' from the context
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
-    if (file && file.type.startsWith('image/')) {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
       const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
+      reader.onload = (event: ProgressEvent<FileReader>) => {
+        const result = event.target?.result as string;
+        setBase64(result);
+        setImageSrc(result);
       };
-
-      reader.onerror = () => {
-        setError('Error occurred while reading the file.');
-        reader.abort();
-      };
-
       reader.readAsDataURL(file);
-    } else {
-      setError('Please select an image file.');
     }
   };
 
   return (
     <div className="flex flex-col justify-center items-center">
-              {selectedImage && 
+              {imageSrc && 
         <Avatar className="h-40 w-40 mb-5">
-            <AvatarImage alt="@shadcn" src={selectedImage} />
+            <AvatarImage alt="@shadcn" src={imageSrc} />
             <AvatarFallback>JP</AvatarFallback>
         </Avatar>}
       <input className="text-sm text-gray-100 mb-5
@@ -40,13 +36,7 @@ const ImageUpload: React.FC = () => {
             file:bg-blue-50 file:text-blue-700
             hover:file:cursor-pointer hover:file:bg-amber-50
             hover:file:text-amber-700
-          "type="file" accept="image/*" onChange={handleImageChange} />
-      {error && <p>Error: {error}</p>}
-      {/* {selectedImage && 
-        <Avatar className="h-24 w-24">
-            <AvatarImage alt="@shadcn" src={selectedImage} />
-            <AvatarFallback>JP</AvatarFallback>
-        </Avatar>} */}
+          "type="file" accept="image/*" onChange={handleFileChange} />
     </div>
   );
 };
