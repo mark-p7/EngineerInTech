@@ -1,5 +1,5 @@
 import React, { useState, createContext, useEffect } from "react";
-import customAxios from "axios";
+import customAxios from "../../lib/axios";
 
 export const defaultUser: IUser = {
     "email": "",

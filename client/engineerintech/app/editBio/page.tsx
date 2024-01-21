@@ -21,11 +21,9 @@ export default function Component() {
     const userContext = useContext(UserContext);
     const { user } = userContext; // Access 'user' from the context
 
+    
 
-
-    // useEffect(() => {
-    //     console.log(UserContext.user)
-    // })
+    
   return (
     <div className="flex flex-col items-center justify-center  bg-gradient-to-tr from-gray-950 to-purple-900">
       <Card className="w-full bg-gradient from-gray-950 to-purple-900 border-none">
