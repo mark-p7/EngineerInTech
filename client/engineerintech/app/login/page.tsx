@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {useRouter} from "next/navigation"
 import { UserContext } from "../context/userContext"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 
 export default function Component() {
 
@@ -19,6 +19,12 @@ export default function Component() {
     const [emailInput, setEmailInput] = useState<string>("");
     const [passwordInput, setPasswordInput] = useState<string>("");
 
+    const { user } = useContext(UserContext);
+
+    useEffect(() => {
+      if (user != undefined && user._id != "") router.push("/swipe");
+    }, [user]);
+    
     const onClickSignUp = () => {
         router.push('/signup')
     }

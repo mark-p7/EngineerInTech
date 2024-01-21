@@ -12,14 +12,22 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useRouter } from "next/navigation";
 import ImageUpload from "./imageUpload"
-
+import { useEffect, useContext } from "react";
+import { UserContext } from "../context/userContext";
 export default function Component() {
-    const router = useRouter();
+
+  const router = useRouter();
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user != undefined && !localStorage.getItem("token")) router.push("/signup");
+  }, [user]);
+  
   return (
     <div className="flex flex-col items-center justify-center  bg-gradient-to-tr from-gray-950 to-purple-900">
       <Card className="w-full bg-gradient from-gray-950 to-purple-900 border-none">
         <button onTouchStart={() => router.push("/")}>
-            <img className="ml-[10.5px] mt-[10.5px] color-white" src="./logos/Expand_left.svg" alt="" />
+          <img className="ml-[10.5px] mt-[10.5px] color-white" src="./logos/Expand_left.svg" alt="" />
         </button>
         <CardHeader>
           <CardTitle className="text-gray-100">Edit Profile</CardTitle>
@@ -39,7 +47,7 @@ export default function Component() {
               </HoverCardContent>
             </HoverCard>
           </div> */}
-                    <div>
+          <div>
             <ImageUpload></ImageUpload>
           </div>
           <div className="space-y-2 text-gray-100">
