@@ -2,27 +2,11 @@ const express = require("express");
 const UserModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { verifyAccessToken, deleteToken } = require("../common");
 
 // Generate access token
 function generateAccessToken(userId) {
     return jwt.sign(userId, process.env.JWT_AUTH_KEY, { expiresIn: "2d" });
-}
-
-// Validate access token
-function verifyAccessToken(token, userId) {
-    try {
-        // Verify the token using the same secret used to create it
-        const decoded = jwt.verify(token, process.env.JWT_AUTH_KEY);
-        return decoded._id != userId ? null : decoded._id;
-    } catch (error) {
-        return null;
-    }
-}
-
-// Delete token from user
-function deleteToken(user, token) {
-    user.tokens = user.tokens.filter((t) => t !== token);
-    user.save();
 }
 
 // Validate email
