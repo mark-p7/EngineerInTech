@@ -22,7 +22,17 @@ async function getProfile(req, res) {
         }
 
         // Send response
-        const profile = { name: otherUser.name, profileImage: otherUser.profileImage, skillCanTeach: otherUser.skillCanTeach, bio: otherUser.bio, dob: otherUser.dateOfBirth, sex: otherUser.sex, location: otherUser.location };
+        const profile = {
+            name: otherUser.name,
+            occupation: otherUser.occupation,
+            dob: otherUser.dateOfBirth,
+            profileImage: otherUser.profileImage, 
+            skills: otherUser.skillCanTeach, 
+            bio: otherUser.bio, 
+            gender: otherUser.sex, 
+            location: otherUser.location,
+            pronouns: otherUser.pronouns
+        };
         res.status(200).json(profile);
 
     } catch (error) {
@@ -49,13 +59,16 @@ async function getNextProfile(req, res) {
         // if there is an incoming interest, then there is a 5% chance that the next user will be the user that sent the interest
         if (user.incomingInterestList.length > 0 && (Math.random() * 100 < 5)) {
             const nextUserId = user.incomingInterestList.unshift();
+            user.skipList.push(nextUserId);
             await user.save();
             res.status(200).json({ nextUserId });
             return;
         }
 
-        const potentialNextUsers = await UserModel.find({ _id: { $nin: user.skipList }});
+        const potentialNextUsers = await UserModel.find({ _id: { $nin: user.skipList } });
         const nextUser = potentialNextUsers[Math.floor(Math.random() * potentialNextUsers.length)];
+        user.skipList.push(nextUser._id);
+        await user.save();
         res.status(200).json({ nextUserId: nextUser._id });
     } catch (error) {
         res.status(500).json({ error: error.message });
