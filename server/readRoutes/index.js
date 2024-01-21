@@ -1,7 +1,6 @@
 const express = require("express");
 const UserModel = require("../models/user");
 const ChatModel = require("../models/chat");
-const MessageModel = require("../models/message");
 const { verifyAccessToken, deleteToken } = require("../common");
 
 async function getProfile(req, res) {
@@ -77,9 +76,69 @@ async function getNextProfile(req, res) {
     }
 }
 
+async function getAllChats(req, res) {
+    try {
+        // Get user
+        if (!req.body.token) throw Error("All inputs are required");
+        const user = await UserModel.findOne({ tokens: req.body.token });
+
+        // Check if users exists
+        if (!user) throw new Error("User does not exist");
+
+        // Check if token is valid
+        const validToken = verifyAccessToken(req.body.token, user._id);
+        if (!validToken) {
+            deleteToken(user, token)
+            throw new Error("Invalid token");
+        }
+
+        const chats = await ChatModel.find({ userIds: user._id });
+        const allChats = [];
+        for (let i = 0; i < chats.length; i++) {
+            const otherUserId = chats[i].userIds.filter(id => id !== user._id)[0];
+            const otherUser = await UserModel.findOne({ _id: otherUserId });
+            await chats[i].save();
+            allChats.push({
+                name: otherUser.name,
+                profileImage: otherUser.profileImage,
+                message: chats[i].messageList.length > 0 ? chats[i].messageList[chats[i].messageList.length - 1].text : "Say Hello"
+            });
+        }
+
+        res.status(200).json(allChats);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+async function getAllMessages(req, res) {
+    try {
+        // Get user
+        if (!(req.body.token && req.body.chatId)) throw Error("All inputs are required");
+        const user = await UserModel.findOne({ tokens: req.body.token });
+
+        // Check if users exists
+        if (!user) throw new Error("User does not exist");
+
+        // Check if token is valid
+        const validToken = verifyAccessToken(req.body.token, user._id);
+        if (!validToken) {
+            deleteToken(user, token)
+            throw new Error("Invalid token");
+        }
+        const chat = await ChatModel.findOne({ _id: req.body.chatId });
+        const messages = chat.messageList;
+        res.status(200).json(messages);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 // Add functions to router
 const readRouter = express();
 readRouter.post("/profile", getProfile);
 readRouter.post("/nextProfile", getNextProfile);
+readRouter.post("/allChats", getAllChats);
+readRouter.post("/allMessages", getAllMessages);
 
 module.exports = readRouter;
