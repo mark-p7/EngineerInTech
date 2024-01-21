@@ -40,7 +40,7 @@ export const getProfile = async(token: string, userId: string): Promise<getProfi
     return response.data;
 }
 
-export const swipeRightRoute = async(token:string, userId: string | undefined) => {
+export const swipeRightRoute = async(token:string, userId: string | undefined): Promise<{isMatched: boolean}> => {
     const response = await customAxios.put("/swipeRight", {token: token, userId: userId});
     return response.data;
 }

@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import {useState, useEffect, useContext} from "react"
 import heart from "./heart.json"
 import cross from "./cross.json"
+import match from "./match.json"
 import { UserContext } from "../context/userContext";
 import { IUser } from "../context/userContext";
 import {getNextProfile, getNextProfileApi, getProfile, getProfileApi, swipeRightRoute }from "./swipe-apis";
@@ -95,6 +96,8 @@ export default function Swipe () {
     // call the getProfile api
     updateNextProfile();
   }, []);
+
+
   
   // FOR TESTING ONLY
   // useEffect(()=>{
@@ -151,15 +154,28 @@ export default function Swipe () {
     }, 1500);
   }
 
+  // for match animation
+  const [isMatched, setMatched] = useState(false)
+
   // swipeRight
   const swipeRight = (name: string) => {
+
+
+
     isLikedBtn();
     console.log(name)
-    setTimeout(function () {
+    setTimeout(async function () {
       handleUpdateClick();
       // need to pass the userID to the swipe right route as well
-      swipeRightRoute(currentToken, prospect?.nextUserId);
+      const boo = await swipeRightRoute(currentToken, prospect?.nextUserId)
+      if(boo.isMatched === true){
+        setMatched(prevState => !prevState)
+        setTimeout(function () {
+          setMatched(prevState => !prevState)
 
+        }, 1500);
+      }
+      
     }, 1000);
 
   }
@@ -218,15 +234,28 @@ export default function Swipe () {
                   style={{ backgroundImage: 'url(' + prospect.nextUserProfileImage + ')' }}
                   className='relative bg-white w-[120vw] max-w-[430px] h-lvh shadow-[0_0_60px_0_rgba(0,0,0,0.30)] bg-cover bg-center'
                   >
-                <div className="flex flex-row top-[4%] absolute">
-                  <button onTouchStart={() => router.push("/")}>
-                    <img className="ml-[10.5px] mt-[10.5px] w-16 invert" src="./logos/chat.svg" alt="" />
-                  </button>
-                  <button onTouchStart={() => router.push("/profile")}>
-                    <img className="ml-[65vw] mt-[10.5px] w-14 invert" src="./logos/edit-profile2.svg" alt="" />
-                  </button>
-                  
+                <div className="flex flex-col">
+                  <div className="flex flex-row top-[4%] absolute">
+                    <button onTouchStart={() => router.push("/")}>
+                      <img className="ml-[10.5px] mt-[10.5px] w-16 invert" src="./logos/chat.svg" alt="" />
+                    </button>
+                    
+                
+
+                      {user.skillCanTeach!=""? (                      <button onTouchStart={() => router.push("/profile")}>
+                        <img className="ml-[65vw] mt-[10.5px] w-14 invert" src="./logos/edit-profile2.svg" alt="" />
+                      </button>):                      <button onTouchStart={() => router.push("/profile")}>
+                        <img className="ml-[65vw] mt-[10.5px] w-14 fill-yellow-900 border-4 border-red-600 p-1 bg-yellow-500" src="./logos/edit-profile2.svg" alt="" />
+                      </button>}
+                
+                    
+ 
+                  </div>
+                  {user.skillCanTeach==""?(<div className="text-3xl absolute top-[30%] border-4 bg-gray-900 text-gray-100">Please fill out personal information before proceeding.</div>):null}
+                    
+
                 </div>
+
 
                 {/* Bottom section */}
                 <div className="bottom-[6%] absolute ml-[4%]">
@@ -253,6 +282,16 @@ export default function Swipe () {
                           <Lottie animationData={undefined} />
                         </div>)}
                     </>}
+
+                    {/* Match animation */}
+                    {isMatched ? (
+                        <div className="flex flex-row justify-center">
+                          <Lottie className="w-30" animationData={match} />
+                        </div>
+                      ) :
+                        (<div className="flex flex-col justify-center">
+                          <Lottie animationData={undefined} />
+                        </div>)}
 
                     {/* Name age location */}
                       <div className="flex flex-row">
@@ -296,15 +335,10 @@ export default function Swipe () {
                       </div> 
                        )}
                        {/* Icons */}
-                      <div className="flex flex-row justify-evenly mt-[5%]">
+                       {user.skillCanTeach!="" ?(                      <div className="flex flex-row justify-evenly mt-[5%]">
                         <div className="w-[52px] h-[52px] bg-black bg-opacity-90 rounded-full flex justify-center">
                           <button onTouchStart={() => swipeLeft(prospect.nextUserName) }>
                             <img className="w-[30px] invert" src="./logos/x-thin.svg" alt="" />
-                          </button>
-                        </div>
-                        <div className="w-[165px] h-[47px] bg-white rounded-[10px] flex justify-center items-center">
-                          <button>
-                            <h1 className="text-black text-[15px] font-[Work Sans] font-bold" onTouchStart={()=> console.log(prospect.nextUserName)}>Send Message</h1>
                           </button>
                         </div>
                         <div className="w-[52px] h-[52px] bg-white bg-opacity-70 rounded-full flex justify-center">
@@ -312,7 +346,8 @@ export default function Swipe () {
                             <img className="w-[32px]" src="./logos/Favorite_fill.svg" alt="" />
                           </button>
                         </div>
-                      </div>
+                      </div>):null}
+
                   </div>
                 </div>
               </div>
