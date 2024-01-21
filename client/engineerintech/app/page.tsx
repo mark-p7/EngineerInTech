@@ -1,3 +1,4 @@
+"use client";
 /**
  * v0 by Vercel.
  * @see https://v0.dev/t/rMZMoDh3QhH
@@ -8,8 +9,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { JSX, SVGProps } from "react"
+import { useRouter } from "next/navigation";
+
 
 export default function Component() {
+  const router = useRouter();
+
   return (
     <>
       <section className="w-full py-12 md:py-24 lg:py-32 bg-pink-500 text-white">
@@ -44,6 +49,8 @@ export default function Component() {
               <Button className="w-full" type="submit">
                 Sign Up
               </Button>
+              <Button className="w-full max-w-sm" onClick={() => router.push("/swipe")} >Swipe</Button>
+
             </form>
           </div>
         </div>
