@@ -75,6 +75,11 @@ export default function Swipe () {
   const router = useRouter();
   const { user } = useContext(UserContext);
 
+  useEffect(() => {
+    if (user != undefined && !user._id) router.push("/signup");
+    if (user != undefined && user._id) updateNextProfile()
+  }, [user]);
+
   const [prospect, setProspect] = useState<getNextProfileApi | null>();
   // const [prospect, setProspect] = useState<getProfileApi>();
 
@@ -82,8 +87,7 @@ export default function Swipe () {
 
   const updateNextProfile = async () => {
     try{
-      console.log(currentToken);
-      const nextProfile = await getNextProfile(currentToken);
+      const nextProfile = await getNextProfile(user.tokens[user.tokens.length - 1]);
       setProspect(nextProfile);
     } catch(e){
       console.error(e);
@@ -91,11 +95,11 @@ export default function Swipe () {
     }
   }
 
-  // TEMPORARILY COMMENTED
-  useEffect(()=>{
-    // call the getProfile api
-    updateNextProfile();
-  }, []);
+  // // TEMPORARILY COMMENTED
+  // useEffect(()=>{
+  //   // call the getProfile api
+  //   updateNextProfile();
+  // }, []);
 
 
   
@@ -297,7 +301,7 @@ export default function Swipe () {
                     {/* Name age location */}
                       <div className="flex flex-row">
                         <h3 className=" text-white text-[32px] font-bold font-[Work Sans]" >{prospect.nextUserName},&nbsp;</h3>
-                        <h3 className=" text-white text-[32px] font-bold font-[Work Sans]"> {"temp"}</h3>
+                        <h3 className=" text-white text-[32px] font-bold font-[Work Sans]"> {prospect.nextUserPronouns}</h3>
                         <img className="ml-2 w-[25px]" src="./logos/Check_fill.svg" alt="" />
                       </div>
                       <div className="flex flex-row">
