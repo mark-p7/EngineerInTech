@@ -18,8 +18,6 @@ import { Divide } from "lucide-react";
 import { editBio } from "@/lib/api";
 
 
-import { useEffect, useContext } from "react";
-import { UserContext } from "../context/userContext";
 export default function Component() {
 
        const [base64, setBase64] = useState<string>('');
@@ -83,9 +81,6 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
   }
 
-
-    
-  const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (user != undefined && !localStorage.getItem("token")) router.push("/signup");
