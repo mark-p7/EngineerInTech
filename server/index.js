@@ -22,8 +22,8 @@ mongoose.connect(MONGODB_URI, {
 const db = mongoose.connection;
 
 // Set limit for body parser
-app.use(bodyParser.json({limit: '50mb', extended: true}));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(bodyParser.json({ limit: '50mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(bodyParser.text({ limit: '200mb' }));
 
 // Import models
@@ -32,7 +32,7 @@ const ChatModel = require("./models/chat");
 
 const io = socket(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: ["http://localhost:3000", process.env.CLIENT_URL],
         methods: ["GET", "POST"]
     }
 });
@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
 
 app.use(cors(
     {
-        origin: "http://localhost:3000",
+        origin: ["http://localhost:3000", process.env.CLIENT_URL],
         credentials: true
     }
 ));
@@ -75,7 +75,6 @@ app.use(express.json());
 app.use("/api", authRouter);
 app.use("/api", readRouter);
 app.use("/api", modifyRouter);
-
 
 // Start server
 server.listen(port, () => console.log(`Example app listening on port ${port}!`));
