@@ -50,7 +50,7 @@ export default function Component() {
                 Sign Up
               </Button>
               <Button className="w-full max-w-sm" onClick={() => router.push("/swipe")} >Swipe</Button>
-
+              <Button className="w-full max-w-sm" onClick={() => router.push("/editBio")} >editBio</Button>
             </form>
           </div>
         </div>
