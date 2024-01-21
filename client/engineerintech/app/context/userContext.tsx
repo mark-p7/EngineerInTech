@@ -1,5 +1,6 @@
+"use client"
 import React, { useState, createContext, useEffect } from "react";
-import customAxios from "../lib/axios";
+import customAxios from "@/lib/axios";
 
 export const defaultUser: IUser = {
     "email": "",
@@ -46,7 +47,7 @@ export interface IUser {
 export interface IUserContext {
     user: IUser;
     register: (email: string, password: string) => void;
-    login: (email: string, password: string) => void;
+    login: (email: string, password: string) => void | Promise<boolean>; 
     logout: () => void;
 }
 
@@ -85,14 +86,21 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         });
     };
 
-    const login = (email: string, password: string) => {
-        customAxios.post("/login", { email: email, password: password }).then((res: { data: IUser; }) => {
-            const newUser: IUser = res.data;
+    const login = async (email: string, password: string): Promise<boolean> => {
+        console.log('called!');
+        try {
+            console.log("qwe")
+            const result = await customAxios.post("/login", { email: email, password: password })
+            const newUser: IUser = result.data;
+            console.log(result);
+            console.log("qwe1")
             if (typeof window !== "undefined") localStorage.setItem("token", newUser.tokens[0]);
             setUser(newUser);
-        }).catch((err: any) => {
-            console.log(err);
-        });
+            return true;
+        } catch (err) {
+            console.log(err)
+        }
+        return false;
     };
 
     const logout = () => {
