@@ -1,12 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {useState} from "react"
+import {useState, useEffect, useContext} from "react"
 import Lottie from "lottie-react";
 import heart from "./heart.json"
 import cross from "./cross.json"
-
-
+import { UserContext } from "../context/userContext";
+import { IUser } from "../context/userContext";
+import {getNextProfile, getNextProfileApi, getProfile, getProfileApi, swipeRightRoute }from "./swipe-apis";
 
 //TODO:
 // Find a way to grab own token
@@ -18,72 +19,97 @@ import cross from "./cross.json"
 
 
 // static data to test with
-var pfpImage = ['./img/richard.jpg','./img/erlich.jpg','./img/monica.jpg','./img/jared.jpg','./img/dinesh.jpg']
+// var pfpImage = ['./img/richard.jpg','./img/erlich.jpg','./img/monica.jpg','./img/jared.jpg','./img/dinesh.jpg']
 
-var db = [
-  {
-    name: 'John Smith',
-    age:'26',
-    url: './img/richard.jpg',
-    location: 'Vancouver, B.C',
-    shortDesc: 'I can teach you Spanish.',
-    longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
-  },
-  {
-    name: 'Erlich Bachman',
-    age:'26',
-    url: './img/erlich.jpg',
-    location: 'Vancouver, B.C',
-    shortDesc: 'I can teach you Spanish.',
-    longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
-  },
-  {
-    name: 'Monica Hall',
-    age:'26',
-    url: './img/monica.jpg',
-    location: 'Vancouver, B.C',
-    shortDesc: 'I can teach you Spanish.',
-    longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
-  },
-  {
-    name: 'Jared Dunn',
-    age:'26',
-    url: './img/jared.jpg',
-    location: 'Vancouver, B.C',
-    shortDesc: 'I can teach you Spanish.',
-    longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
-  },
-  {
-    name: 'Dinesh Chugtai',
-    age:'26',
-    url: './img/dinesh.jpg',
-    location: 'Vancouver, B.C',
-    shortDesc: 'I can teach you Spanish.',
-    longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
+// var db = [
+//   {
+//     name: 'John Smith',
+//     age:'26',
+//     url: './img/richard.jpg',
+//     location: 'Vancouver, B.C',
+//     shortDesc: 'I can teach you Spanish.',
+//     longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
+//   },
+//   {
+//     name: 'Erlich Bachman',
+//     age:'26',
+//     url: './img/erlich.jpg',
+//     location: 'Vancouver, B.C',
+//     shortDesc: 'I can teach you Spanish.',
+//     longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
+//   },
+//   {
+//     name: 'Monica Hall',
+//     age:'26',
+//     url: './img/monica.jpg',
+//     location: 'Vancouver, B.C',
+//     shortDesc: 'I can teach you Spanish.',
+//     longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
+//   },
+//   {
+//     name: 'Jared Dunn',
+//     age:'26',
+//     url: './img/jared.jpg',
+//     location: 'Vancouver, B.C',
+//     shortDesc: 'I can teach you Spanish.',
+//     longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
+//   },
+//   {
+//     name: 'Dinesh Chugtai',
+//     age:'26',
+//     url: './img/dinesh.jpg',
+//     location: 'Vancouver, B.C',
+//     shortDesc: 'I can teach you Spanish.',
+//     longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
+//   }
+// ]
+
+
+
+
+export default function Swipe () {
+  const router = useRouter();
+  const userContext = useContext(UserContext);
+  const {user} = userContext;
+
+  const [prospect, setProspect] = useState<getNextProfileApi | null>();
+  // const [prospect, setProspect] = useState<getProfileApi>();
+
+  const currentToken = user.tokens[user.tokens.length - 1];
+
+  const updateNextProfile = async () => {
+    try{
+      console.log(currentToken);
+      const nextProfile = await getNextProfile(currentToken);
+      setProspect(nextProfile);
+    } catch(e){
+      console.error(e);
+      setProspect(null)
+    }
   }
-]
 
+  // TEMPORARILY COMMENTED
+  useEffect(()=>{
+    // call the getProfile api
+    updateNextProfile();
+  }, []);
+  
+  // FOR TESTING ONLY
+  // useEffect(()=>{
+  //   // call the getProfile api
+  //   const currentToken = user.tokens[user.tokens.length - 1];
 
+  //   const updateNextProfile = async () => {
+  //     console.log(currentToken);
+  //     const nextProfile = await getNextProfile(currentToken, '65acc00113511d3bed509482');
+  //     setProspect(nextProfile);
+  //   }
+  //   updateNextProfile();
+  // }, []);
 
-function Swipe () {
-  const router = useRouter()
-
-  // keeps track of deck of cards
-  const [manualUpdatedList, setManualUpdatedList] = useState(db);
 
   const handleUpdateClick = () => {
-    // getNextProfile()
-
-    setManualUpdatedList([ ...manualUpdatedList,{
-      name: (Math.random() %100).toFixed(3),
-      age:'26',
-      url: pfpImage[Math.floor(Math.random() * (4 - 0 + 1) + 0)],
-      location: 'Vancouver, B.C',
-      shortDesc: 'I can teach you Spanish.',
-      longDesc: 'Hi my name is Alphonsus and I love playing soccer My favourite past times is to go to the park and enjoy the sun.',
-    }])
-
-    
+    updateNextProfile()
   };
 
 
@@ -120,6 +146,7 @@ function Swipe () {
     console.log(name)
     setTimeout(function() {
       handleUpdateClick();
+      swipeRightRoute(currentToken);
       
     }, 1000);
     
@@ -133,6 +160,7 @@ function Swipe () {
       handleUpdateClick();
       
     }, 1000);
+    console.log("PRINTING PROSPECT" + prospect);
   }
 
 
@@ -148,18 +176,21 @@ function Swipe () {
         rel='stylesheet'
       />
       <div className=" overflow-x-hidden overflow-y-hidden">
-      <button className="absolute" onClick={() => console.log("herro")}>swipe page</button>
+      {/* <button className="absolute" onClick={() => console.log("herro")}>No more people to show!</button> */}
+      {!prospect && (
+        <p className="items-center justify-center">Stay tuned for more profiles..</p>
+      )}
         <div className='w-[120vw] max-w-[430px] h-[500px]'>
-            {manualUpdatedList.map((character, index) => (
+          {prospect && (
             <div
                 // ref={childRefs[index]}
                 className='absolute'
-                key={character.name}
+                key={prospect.nextUserName}
                 // onSwipe={(dir) => swiped(dir, character.name, index)}
                 // onCardLeftScreen={() => outOfFrame(character.name, index)}
             >
                 <div
-                  style={{ backgroundImage: 'url(' + character.url + ')' }}
+                  style={{ backgroundImage: 'url(' + prospect.nextUserProfileImage + ')' }}
                   className='relative bg-white w-[120vw] max-w-[430px] h-lvh shadow-[0_0_60px_0_rgba(0,0,0,0.30)] bg-cover bg-center'
                   >
                   <div className="flex flex-row top-[4%] absolute ml-[0.001%]">
@@ -195,13 +226,13 @@ function Swipe () {
 
                     {/* Name age location */}
                       <div className="flex flex-row">
-                        <h3 className=" text-white text-[32px] font-bold font-[Work Sans]" >{character.name},&nbsp;</h3>
-                        <h3 className=" text-white text-[32px] font-bold font-[Work Sans]"> {character.age}</h3>
+                        <h3 className=" text-white text-[32px] font-bold font-[Work Sans]" >{prospect.nextUserName},&nbsp;</h3>
+                        <h3 className=" text-white text-[32px] font-bold font-[Work Sans]"> {"temp"}</h3>
                         <img className="ml-2 w-[25px]" src="./logos/Check_fill.svg" alt="" />
                       </div>
                       <div className="flex flex-row">
                         <img className="w-[32px]" src="./logos/Pin.svg" alt="" />
-                        <h3 className="text-white text-[20px] font-[Work Sans]" >{character.location}</h3>
+                        <h3 className="text-white text-[20px] font-[Work Sans]" >{prospect.nextUserLocation}</h3>
                       </div>
                       {isReadMoreShown ? 
 
@@ -209,8 +240,8 @@ function Swipe () {
                       (
                       <div className="flex flex-col justify-between w-[90vw] h-[25vh] bg-stone-900 bg-opacity-90 rounded-[10px] mt-[1%]">
                         <div className="flex flex-col mb-auto ml-4 mt-5 mr-3">
-                          <h1 className="text-white text-2xl font-bold font-[Work Sans] m-2">{character.shortDesc}</h1>
-                          <h1 className="text-white text-md font-[Work Sans] mt-[5%] m-2">{character.longDesc}</h1>
+                          <h1 className="text-white text-2xl font-bold font-[Work Sans] m-2">{prospect.nextUserSkills}</h1>
+                          <h1 className="text-white text-md font-[Work Sans] mt-[5%] m-2">{prospect.nextUserBio}</h1>
                         </div>
 
                         <div className="flex flex-col items-end m-3">
@@ -225,7 +256,7 @@ function Swipe () {
                       (
                       <div className="flex flex-col justify-between w-[90vw] h-[10vh] bg-stone-900 bg-opacity-70 rounded-[10px] mt-[1%]">
                         <div className="flex flex-col mt-auto ml-4">
-                          <h1 className="text-white text-xl font-bold font-[Work Sans]">{character.shortDesc}</h1>
+                          <h1 className="text-white text-xl font-bold font-[Work Sans]">{prospect.nextUserSkills}</h1>
                         </div>
                         <div className="flex flex-col items-end m-3">
                             <button className="" onTouchStart={toggleBtn}>
@@ -237,17 +268,17 @@ function Swipe () {
                        {/* Icons */}
                       <div className="flex flex-row justify-evenly mt-[5%]">
                         <div className="w-[52px] h-[52px] bg-black bg-opacity-90 rounded-full flex justify-center">
-                          <button onTouchStart={() => swipeLeft(character.name) }>
+                          <button onTouchStart={() => swipeLeft(prospect.nextUserName) }>
                             <img className="w-[30px] invert" src="./logos/x-thin.svg" alt="" />
                           </button>
                         </div>
                         <div className="w-[165px] h-[47px] bg-white rounded-[10px] flex justify-center items-center">
                           <button>
-                            <h1 className="text-black text-[15px] font-[Work Sans] font-bold" onTouchStart={()=> console.log(character.name)}>Send Message</h1>
+                            <h1 className="text-black text-[15px] font-[Work Sans] font-bold" onTouchStart={()=> console.log(prospect.name)}>Send Message</h1>
                           </button>
                         </div>
                         <div className="w-[52px] h-[52px] bg-white bg-opacity-70 rounded-full flex justify-center">
-                          <button onTouchStart={() => swipeRight(character.name)}>
+                          <button onTouchStart={() => swipeRight(prospect.nextUserName)}>
                             <img className="w-[32px]" src="./logos/Favorite_fill.svg" alt="" />
                           </button>
                         </div>
@@ -256,11 +287,9 @@ function Swipe () {
                 </div>
                 </div>
             </div>
-            ))}
+          )}
         </div>              
       </div>
     </div>
   )
 }
-
-export default Swipe

@@ -70,7 +70,7 @@ async function getNextProfile(req, res) {
         const nextUser = potentialNextUsers[Math.floor(Math.random() * potentialNextUsers.length)];
         user.skipList.push(nextUser._id);
         await user.save();
-        res.status(200).json({ nextUserId: nextUser._id });
+        res.status(200).json({ nextUserId: nextUser._id, nextUserName: nextUser.name, nextUserOccupation: nextUser.occupation, nextUserDob: nextUser.dateOfBirth, nextUserProfileImage: nextUser.profileImage, nextUserSkills: nextUser.skills, nextUserBio: nextUser.bio, nextUserGender: nextUser.sex, nextUserLocation: nextUser.location, nextUserPronouns: nextUser.pronouns});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
