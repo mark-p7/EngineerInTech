@@ -35,6 +35,10 @@ const User = new mongoose.Schema(
             type: String,
             default: "",
         },
+        pronouns: {
+            type: String,
+            default: "",
+        },
         location: {
             type: String,
             default: "",
