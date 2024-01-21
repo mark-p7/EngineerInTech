@@ -89,7 +89,7 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   return (
     <div className="flex flex-col items-center justify-center  bg-gradient-to-tr from-gray-950 to-purple-900">
       <Card className="w-full bg-gradient from-gray-950 to-purple-900 border-none">
-        <button onTouchStart={() => router.push("/")}>
+        <button onTouchStart={() => router.push("/profile")}>
           <img className="ml-[10.5px] mt-[10.5px] color-white" src="./logos/Expand_left.svg" alt="" />
         </button>
         <CardHeader>

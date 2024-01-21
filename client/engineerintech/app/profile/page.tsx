@@ -32,7 +32,7 @@ function Profile() {
   }
 
   const openEditProfilePage = () => {
-    router.push("/editProfilePage")
+    router.push("/editBio")
   }
 
   return (
@@ -63,7 +63,7 @@ function Profile() {
                 <button onTouchStart={() => router.push("/")}>
                   <img className="ml-[10.5px] mt-[10.5px] color-white" src="./logos/Expand_left.svg" alt="" />
                 </button>
-                <img className="ml-[69vw] mt-[10.5px] color-white" src="./logos/Meatballs_menu.svg" alt="" />
+                {/* <img className="ml-[69vw] mt-[10.5px] color-white" src="./logos/Meatballs_menu.svg" alt="" /> */}
               </div>
 
               {/* Bottom section */}
