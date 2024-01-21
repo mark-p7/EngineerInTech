@@ -47,7 +47,7 @@ export interface IUser {
 export interface IUserContext {
     user: IUser;
     register: (email: string, password: string) => void | Promise<boolean>;
-    login: (email: string, password: string) => void | Promise<boolean>; 
+    login: (email: string, password: string) => void | Promise<boolean>;
     logout: () => void;
 }
 
@@ -65,38 +65,32 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         if (typeof window === "undefined") return;
-
         const token = localStorage.getItem("token");
         if (!token) return;
-
-        customAxios.post("/token/validate").then((res: { data: { _id: any; user: React.SetStateAction<IUser>; }; }) => {
-            res.data._id ? setUser(res.data.user) : setUser(defaultUser);
+        customAxios.post("/token/validate", { token: token }).then((res) => {
+            res.data._id != "" ? setUser(res.data) : setUser(defaultUser);
         }).catch((err: any) => {
-            setUser(defaultUser);
+            setUser(err);
         });
     }, []);
 
     const register = async (email: string, password: string): Promise<boolean> => {
-        try{
+        try {
             const result = await customAxios.post("/register", { email: email, password: password });
             const newUser: IUser = result.data;
             if (typeof window !== "undefined") localStorage.setItem("token", newUser.tokens[0]);
             setUser(newUser);
             return true;
-        } catch(err){
+        } catch (err) {
             console.log(err)
         }
         return false;
     };
 
     const login = async (email: string, password: string): Promise<boolean> => {
-        console.log('called!');
         try {
-            console.log("qwe")
             const result = await customAxios.post("/login", { email: email, password: password })
             const newUser: IUser = result.data;
-            console.log(result);
-            console.log("qwe1")
             if (typeof window !== "undefined") localStorage.setItem("token", newUser.tokens[0]);
             setUser(newUser);
             return true;
