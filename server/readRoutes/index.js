@@ -66,11 +66,16 @@ async function getNextProfile(req, res) {
             return;
         }
 
-        const potentialNextUsers = await UserModel.find({ _id: { $nin: user.skipList } });
-        const nextUser = potentialNextUsers[Math.floor(Math.random() * potentialNextUsers.length)];
+        const potentialNextUser = await UserModel.aggregate([
+            { $match: { _id: { $nin: user.skipList } } },
+            { $sample: { size: 1 } }
+        ]).exec();
+
+        // potentialNextUser will be an array with one element, or empty if no user is found.
+        const nextUser = potentialNextUser.length > 0 ? potentialNextUser[0] : null;
         user.skipList.push(nextUser._id);
         await user.save();
-        res.status(200).json({ nextUserId: nextUser._id, nextUserName: nextUser.name, nextUserOccupation: nextUser.occupation, nextUserDob: nextUser.dateOfBirth, nextUserProfileImage: nextUser.profileImage, nextUserSkills: nextUser.skillCanTeach, nextUserBio: nextUser.bio, nextUserGender: nextUser.sex, nextUserLocation: nextUser.location, nextUserPronouns: nextUser.pronouns});
+        res.status(200).json({ nextUserId: nextUser._id, nextUserName: nextUser.name, nextUserOccupation: nextUser.occupation, nextUserDob: nextUser.dateOfBirth, nextUserProfileImage: nextUser.profileImage, nextUserSkills: nextUser.skillCanTeach, nextUserBio: nextUser.bio, nextUserGender: nextUser.sex, nextUserLocation: nextUser.location, nextUserPronouns: nextUser.pronouns });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -95,7 +100,7 @@ async function getAllChats(req, res) {
         const chats = await ChatModel.find({ userIds: user._id });
         const allChats = [];
         for (let i = 0; i < chats.length; i++) {
-            const otherUserId = chats[i].userIds.filter(id => id !== user._id)[0];
+            const otherUserId = chats[i].userIds[0] != user._id ? chats[i].userIds[0] : chats[i].userIds[1];
             const otherUser = await UserModel.findOne({ _id: otherUserId });
             await chats[i].save();
             allChats.push({
