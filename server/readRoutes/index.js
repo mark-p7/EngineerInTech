@@ -1,5 +1,7 @@
 const express = require("express");
 const UserModel = require("../models/user");
+const ChatModel = require("../models/chat");
+const MessageModel = require("../models/message");
 const { verifyAccessToken, deleteToken } = require("../common");
 
 async function getProfile(req, res) {
@@ -26,10 +28,10 @@ async function getProfile(req, res) {
             name: otherUser.name,
             occupation: otherUser.occupation,
             dob: otherUser.dateOfBirth,
-            profileImage: otherUser.profileImage, 
-            skills: otherUser.skillCanTeach, 
-            bio: otherUser.bio, 
-            gender: otherUser.sex, 
+            profileImage: otherUser.profileImage,
+            skills: otherUser.skillCanTeach,
+            bio: otherUser.bio,
+            gender: otherUser.sex,
             location: otherUser.location,
             pronouns: otherUser.pronouns
         };
@@ -76,8 +78,8 @@ async function getNextProfile(req, res) {
 }
 
 // Add functions to router
-const modifyRouter = express();
-modifyRouter.get("/profile", getProfile);
-modifyRouter.get("/nextProfile", getNextProfile);
+const readRouter = express();
+readRouter.post("/profile", getProfile);
+readRouter.post("/nextProfile", getNextProfile);
 
-module.exports = modifyRouter;
+module.exports = readRouter;
