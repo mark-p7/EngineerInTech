@@ -170,11 +170,11 @@ function Swipe() {
                 style={{ backgroundImage: 'url(' + character.url + ')' }}
                 className='relative bg-white w-[120vw] max-w-[430px] h-lvh shadow-[0_0_60px_0_rgba(0,0,0,0.30)] bg-cover bg-center'
               >
-                <div className="flex flex-row top-[4%] absolute ml-[0.001%]">
-                  <button onTouchStart={() => router.push("/")}>
+                <div className="flex flex-row top-[4%] justify-end items-end content-end">
+                  {/* <button onTouchStart={() => router.push("/")}>
                     <img className="ml-[10.5px] mt-[10.5px] color-white" src="./logos/Expand_left.svg" alt="" />
-                  </button>
-                  <img className="ml-[69vw] mt-[10.5px] color-white" src="./logos/Meatballs_menu.svg" alt="" />
+                  </button> */}
+                  <img className="mr-10 mt-10 color-white" src="./logos/Meatballs_menu.svg" alt="" />
                 </div>
 
                 {/* Bottom section */}
