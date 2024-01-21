@@ -127,7 +127,7 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     </div>
           </div>
           <div className="space-y-2 text-gray-100">
-            <Label htmlFor="name">name</Label>
+            <Label htmlFor="name">Name</Label>
             <Input id="name" className="text-gray-900" name="name" placeholder={formData.name==""? "Enter your name": formData.name} onChange={handleInputChange} />
           </div>
           <div className="space-y-2 text-gray-100">
@@ -139,13 +139,12 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             <Label htmlFor="occupation">Occupation</Label>
             <Input id="occupation" className="text-gray-900" name="occupation" placeholder={formData.occupation==""? "Enter your occupation": formData.occupation} onChange={handleInputChange}/>
           </div>
-          <div className="space-y-2 text-gray-100">
+          {/* <div className="space-y-2 text-gray-100">
             <Label htmlFor="dob">Date of Birth</Label>
             {formData.dob==""? ( <Input className="text-gray-900" id="dob" name="dob" type="date"/>):
             (            <Input className="text-gray-900" id="dob" name="dob" placeholder={formData.dob} type="string" readOnly/>)   
         }
- 
-          </div>
+          </div> */}
           <div className="space-y-2 text-gray-100">
             <Label htmlFor="gender">Gender</Label>
             <Input id="gender" className="text-gray-900" name="gender" placeholder={formData.gender==""? "Enter your gender": formData.gender} onChange={handleInputChange}/>
