@@ -74,7 +74,7 @@ function Swipe() {
 
   useEffect(() => {
     if (user != undefined && !user._id) router.push("/signup");
-  }, []);
+  }, [user]);
 
   // keeps track of deck of cards
   const [manualUpdatedList, setManualUpdatedList] = useState(db);
