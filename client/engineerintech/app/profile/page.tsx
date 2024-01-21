@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button";
 import { UserContext } from "../context/userContext";
+import { LogOut } from "lucide-react";
 
 // static data to test with
 const person =
@@ -19,7 +20,8 @@ const person =
 
 function Profile() {
   const router = useRouter()
-  const { user } = useContext(UserContext);
+  const { user,logout} = useContext(UserContext);
+  
 
   useEffect(() =>{
 
@@ -68,11 +70,11 @@ function Profile() {
               style={{ backgroundImage: 'url(' + user.profileImage + ')' }}
               className='relative bg-white w-[120vw] max-w-[430px] h-lvh shadow-[0_0_60px_0_rgba(0,0,0,0.30)] bg-cover bg-center'
             >
-              <div className="flex flex-row top-[4%] absolute ml-[0.001%]">
+              <div className="flex flex-row top-[4%] justify-between ml-[0.001%]">
                 <button onTouchStart={() => router.push("/")}>
                   <img className="ml-[10.5px] mt-[10.5px] color-white" src="./logos/Expand_left.svg" alt="" />
                 </button>
-                {/* <img className="ml-[69vw] mt-[10.5px] color-white" src="./logos/Meatballs_menu.svg" alt="" /> */}
+                <Button className="p-5 m-5" onClick={logout}>Logout</Button>
               </div>
 
               {/* Bottom section */}
@@ -82,7 +84,7 @@ function Profile() {
                   {/* Name age location */}
                   <div className="flex flex-row">
                     <h3 className=" text-white text-[32px] font-bold font-[Work Sans]" >{user.name},&nbsp;</h3>
-                    <h3 className=" text-white text-[32px] font-bold font-[Work Sans]"> {user.age}</h3>
+                    <h3 className=" text-white text-[32px] font-bold font-[Work Sans]"> {user.pronouns}</h3>
                     <img className="ml-2 w-[25px]" src="./logos/Check_fill.svg" alt="" />
                   </div>
                   <div className="flex flex-row">
