@@ -43,7 +43,9 @@ export default function Component() {
 
   const router = useRouter();
     const userContext = useContext(UserContext);
-    const { user } = userContext; // Access 'user' from the context
+    const { user,reloadUser } = userContext; // Access 'user' from the context
+
+    
 
     interface IProfile {
             name: string,
@@ -75,9 +77,10 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit= () => {
+  const handleSubmit= async() => {
     console.log(formData)
-    editBio(user.tokens[user.tokens.length-1],formData.name,formData.occupation,formData.dob,formData.gender,formData.pronouns,formData.skills,formData.location,formData.bio,formData.profileImage);
+    await editBio(user.tokens[user.tokens.length-1],formData.name,formData.occupation,formData.dob,formData.gender,formData.pronouns,formData.skills,formData.location,formData.bio,formData.profileImage);
+    await reloadUser();
 
   }
 

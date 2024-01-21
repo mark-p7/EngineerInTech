@@ -21,6 +21,15 @@ function Profile() {
   const router = useRouter()
   const { user } = useContext(UserContext);
 
+  useEffect(() =>{
+
+
+
+
+  },[user])
+
+
+
   useEffect(() => {
     if (user != undefined && !user._id) router.push("/signup");
   }, [user]);
@@ -56,7 +65,7 @@ function Profile() {
           // onCardLeftScreen={() => outOfFrame(character.name, index)}
           >
             <div
-              style={{ backgroundImage: 'url(' + person.url + ')' }}
+              style={{ backgroundImage: 'url(' + user.profileImage + ')' }}
               className='relative bg-white w-[120vw] max-w-[430px] h-lvh shadow-[0_0_60px_0_rgba(0,0,0,0.30)] bg-cover bg-center'
             >
               <div className="flex flex-row top-[4%] absolute ml-[0.001%]">
@@ -72,13 +81,13 @@ function Profile() {
 
                   {/* Name age location */}
                   <div className="flex flex-row">
-                    <h3 className=" text-white text-[32px] font-bold font-[Work Sans]" >{person.name},&nbsp;</h3>
-                    <h3 className=" text-white text-[32px] font-bold font-[Work Sans]"> {person.age}</h3>
+                    <h3 className=" text-white text-[32px] font-bold font-[Work Sans]" >{user.name},&nbsp;</h3>
+                    <h3 className=" text-white text-[32px] font-bold font-[Work Sans]"> {user.age}</h3>
                     <img className="ml-2 w-[25px]" src="./logos/Check_fill.svg" alt="" />
                   </div>
                   <div className="flex flex-row">
                     <img className="w-[32px]" src="./logos/Pin.svg" alt="" />
-                    <h3 className="text-white text-[20px] font-[Work Sans]" >{person.location}</h3>
+                    <h3 className="text-white text-[20px] font-[Work Sans]" >{user.location}</h3>
                   </div>
                   {isReadMoreShown ?
 
@@ -86,8 +95,8 @@ function Profile() {
                     (
                       <div className="flex flex-col justify-between w-[90vw] h-[25vh] bg-stone-900 bg-opacity-90 rounded-[10px] mt-[1%]">
                         <div className="flex flex-col mb-auto ml-4 mt-5 mr-3">
-                          <h1 className="text-white text-2xl font-bold font-[Work Sans] m-2">{person.shortDesc}</h1>
-                          <h1 className="text-white text-md font-[Work Sans] mt-[5%] m-2">{person.longDesc}</h1>
+                          <h1 className="text-white text-2xl font-bold font-[Work Sans] m-2">{"I can teach you " + user.skillCanTeach}</h1>
+                          <h1 className="text-white text-md font-[Work Sans] mt-[5%] m-2">{user.bio}</h1>
                         </div>
 
                         <div className="flex flex-col items-end m-3">
@@ -102,7 +111,7 @@ function Profile() {
                     (
                       <div className="flex flex-col justify-between w-[90vw] h-[10vh] bg-stone-900 bg-opacity-70 rounded-[10px] mt-[1%]">
                         <div className="flex flex-col mt-auto ml-4">
-                          <h1 className="text-white text-xl font-bold font-[Work Sans]">{person.shortDesc}</h1>
+                          <h1 className="text-white text-xl font-bold font-[Work Sans]">{"I can teach you " + user.skillCanTeach}</h1>
                         </div>
                         <div className="flex flex-col items-end m-3">
                           <button className="" onTouchStart={toggleBtn}>
