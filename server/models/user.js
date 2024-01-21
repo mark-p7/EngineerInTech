@@ -27,10 +27,6 @@ const User = new mongoose.Schema(
             type: String,
             default: "",
         },
-        images: {
-            type: [String],
-            default: [],
-        },
         dateOfBirth: {
             type: Date,
             default: Date.now,
@@ -51,7 +47,7 @@ const User = new mongoose.Schema(
             type: String,
             default: "",
         },
-        userDesc: {
+        bio: {
             type: String,
             default: "",
         },
